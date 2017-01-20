@@ -1,0 +1,6 @@
+.DS_Store
+House_XML/*
+
+#exceptions
+!House_XML/tests
+!House_XML/README
