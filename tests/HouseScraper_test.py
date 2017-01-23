@@ -27,9 +27,9 @@ class TestHouseScraperClass():
         assert_equal(self.house.sqft, "1,836")
 
     def test_parse_house_expenses(self):
-        assert_equal(self.house.tax_rate, 0.0102)
+        assert_equal(self.house.tax_rate, 0.0104)
         assert_equal(self.house.principal, 713)
-        assert_equal(self.house.tax, 169)
+        assert_equal(self.house.tax, 172)
         assert_equal(self.house.hoa, 0)
         assert_equal(self.house.sqft_cost, 108)
 

@@ -50,7 +50,7 @@ class HouseScraper(object):
         self.baths = int(self.soup.find('li', {"data-label" : "property-meta-baths"}).text[0])
 
     def set_house_expenses(self):
-        self.tax_rate = 0.0102 #int(self.soup.find('input', "data-rate").value)
+        self.tax_rate = float(self.soup.find('input', id="property_tax").get('data-rate'))
         self.sqft_cost = int(self.soup.find('li', {"data-label" : "property-sqft"}).text[-3:])
         self.principal = int(self.soup.find('span', id="principle_interest").text[1:])
         self.tax = int(self.price * self.tax_rate / 12)
