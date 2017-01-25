@@ -13,15 +13,16 @@ class HouseScraper(object):
         self.mls = 0
         self.price = 0
         self.zip = 0
-        self.beds = ""
-        self.baths = ""
+        self.beds = 0
+        self.baths = 0
         self.principal = 0
         self.tax = 0
         self.hoa = 0
-        self.expenses = 0
+        self.total_expenses = 0
         self.sqft = ""
         self.sqft_cost = 0
 
+    #This function is used for live websites (not downloaded ones)
     def fetch_house(self):
         http = httplib2.Http(timeout=self.timeout)
         headers, content = http.request(self.url)
