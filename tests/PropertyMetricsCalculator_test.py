@@ -1,60 +1,44 @@
 #!/usr/bin/env python
 
-from Calculations.HouseCalc import HouseCalc
-from Parsing.HouseScraper import HouseScraper
+from Calculations.PropertyMetricsCalculator import PropertyMetricsCalculator
+from Parsing.HousePageScraper import HousePageScraper
 from nose.tools import *
+from Models.House import House
 
 class TestPropertyMetricsCalculatorClass():
-    @classmethod
-    def setUpClass(self):
-        self.house = HouseScraper()
-        self.house.price = 100000
-        self.house.zip = 95101
-        self.house.beds = 4
-        self.house.baths = 2
-        self.house.principal = 417
-        self.house.hoa = 0
-        self.house.expenses = 0
-        self.house.sqft_cost = 108
-        interest_rate = 4.75
-        down_pay = 20
-        tax_rate = 0.015
-        self.house_calc = HouseCalc(self.house, 1200, down_pay, interest_rate, tax_rate)
+    def setUp(self):
+        mls_id = 3
+        price = 100000
+        zip_code = 95101
+        beds = 4
+        baths = 2
+        principal = 405 
+        tax_rate = 0.0125
+        hoa = 0
+        expenses = 0
+        sqft = "1500"
+        sqft_cost = 108
+        self.house = House(mls_id,price,zip_code,beds,baths,principal,tax_rate,hoa,sqft,sqft_cost)
+        self.calculator = PropertyMetricsCalculator(1500)
 
     def teardown(self):
         pass
 
     def test_cost_assumptions(self):
-        self.house_calc.calc_cost_assumptions()
-        assert_equal(self.house_calc.total_cost, 109500)
+        assert_equal(self.calculator.calc_cost_assumptions(self.house.price), 109500)
 
     def test_cash_outlay(self):
-        self.house_calc.calc_cash_outlay()
-        assert_equal(self.house_calc.cash_outlay, 29500)
+        assert_equal(self.calculator.calc_cash_outlay(self.house.price), 29500)
 
     def test_gross_income(self):
-        self.house_calc.calc_gross_income()
-        assert_equal(self.house_calc.gross_income, 12960)
+        assert_equal(self.calculator.calc_gross_income(), 16200)
 
-    def test_total_expenses(self):
-        pmt_used = True
-        maintenance = 1500 # $$
-        pmt_fee = 0.1 # percentage
-        self.house_calc.calc_yearly_expenses(pmt_used, pmt_fee, maintenance)
-        assert_equal(self.house_calc.yearly_expenses, 4891)
+    def test_yearly_expenses(self):
+        assert_equal(self.calculator.calc_yearly_expenses(True, self.house.price, 16200), 5215.0)
 
     def test_cash_flow(self):
-        self.house_calc.calc_gross_income()
-        self.house_calc.calc_yearly_expenses(True)
-        self.house_calc.calc_cash_flow()
-        assert_equal(self.house_calc.cash_flow, 3061)
-
-    def test_cash_roi(self):
-        assert_equal(self.house_calc.cash_roi, 10.57)
-
+        assert_equal(self.calculator.calc_cash_flow(self.house.principal,16200, 5215), 6125)
+        #assert_equal(calculator.calculate_cash_roe(self.house.price), 13.49)
     def test_cap_rate(self):
-        self.house_calc.calc_gross_income()
-        self.house_calc.calc_yearly_expenses(True)
-        self.house_calc.calc_cap_rate()
-        assert_equal(int(self.house_calc.cap_rate), 8)
+        assert_equal(self.calculator.calc_cap_rate(self.house.price,16200, 5215), 10.985)
         

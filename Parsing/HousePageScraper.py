@@ -2,7 +2,7 @@
 
 import urllib2
 import httplib2
-import 
+from Models.House import House
 from BeautifulSoup import BeautifulSoup
 
 class PageNotFound(RuntimeError): pass
@@ -26,17 +26,17 @@ class HousePageScraper(object):
         return content
 
     def parse_content(self, content):
-        content = BeautifulSoup(content)
-        mls = int(self.soup.find('td', itemprop='productID').text)
-        price = int(self.soup.find('span', itemprop="price").get('content'))
-        zip_code = int(self.soup.find('span', itemprop="postalCode").text)
-        sqft = self.soup.find('li', "property-meta-block", 'span').text[:5]
-        beds = int(self.soup.find('li', {"data-label" : "property-meta-beds"}).text[0])
-        baths = int(self.soup.find('li', {"data-label" : "property-meta-baths"}).text[0])
-        tax_rate = float(self.soup.find('input', id="property_tax").get('data-rate'))
-        sqft_cost = int(self.soup.find('li', {"data-label" : "property-sqft"}).text[-3:])
-        principal = int(self.soup.find('span', id="principle_interest").text[1:])
-        house = new House(mls, price, zip_code, beds, baths, principal, tax_rate, hoa, sqft, sqft_cost)
+        soup = BeautifulSoup(content)
+        mls_id = int(soup.find('td', itemprop='productID').text)
+        price = int(soup.find('span', itemprop="price").get('content'))
+        zip_code = int(soup.find('span', itemprop="postalCode").text)
+        sqft = soup.find('li', "property-meta-block", 'span').text[:5]
+        beds = int(soup.find('li', {"data-label" : "property-meta-beds"}).text[0])
+        baths = int(soup.find('li', {"data-label" : "property-meta-baths"}).text[0])
+        tax_rate = float(soup.find('input', id="property_tax").get('data-rate'))
+        sqft_cost = int(soup.find('li', {"data-label" : "property-sqft"}).text[-3:])
+        principal = int(soup.find('span', id="principle_interest").text[1:])
+        house = House(mls_id, price, zip_code, beds, baths, principal, tax_rate, True, sqft, sqft_cost)
         return house
 
     def scrape_house_url(self, url):
