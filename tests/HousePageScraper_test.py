@@ -3,14 +3,17 @@
 from Parsing.HouseScraper import HouseScraper
 from nose.tools import *
 
-
-class TestHouseScraperClass():
-    def setUp(self):
-        self.house_url = "file:///Users/Ninja-Panda/web-scrape/re-scrape/House_XML/tests/2796_Lester/\
+class TestHousePageScraperClass():
+    @classmethod
+    def setUpClass(self):
+        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+        # self.house_url = "file:///Users/Ninja-Panda/web-scrape/re-scrape/House_XML/tests/2796_Lester/\
+# 2796%20S%20Lester%20St%20W,%20West%20Valley%20City,%20UT%2084119%20-%20realtor.com%C2%AE.htm"    
+        self.house_url = "file://" + ROOT_DIR + "/House_XML/tests/2796_Lester/\
 2796%20S%20Lester%20St%20W,%20West%20Valley%20City,%20UT%2084119%20-%20realtor.com%C2%AE.htm"
-        self.scraper = HouseScraper(self.house_url)
-        content = self.scraper.fetch_htm()
-        self.house = self.scraper.parse_house(content)
+        self.scraper = HousePageScraper()
+        content = self.scraper.fetch_htm_content(self.house_url)
+        self.house = self.scraper.parse_content(content)
 
     def teardown(self):
         pass
